@@ -3,11 +3,8 @@ package br.com.igorjose.faculdade.controller;
 import br.com.igorjose.faculdade.dto.MessageDTO;
 import br.com.igorjose.faculdade.models.Curso;
 import br.com.igorjose.faculdade.repository.CursoRepository;
-import org.aspectj.bridge.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 

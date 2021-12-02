@@ -1,11 +1,9 @@
 package br.com.igorjose.faculdade.controller;
 
 import br.com.igorjose.faculdade.dto.MessageDTO;
-import br.com.igorjose.faculdade.models.Curso;
 import br.com.igorjose.faculdade.models.Disciplina;
 import br.com.igorjose.faculdade.repository.DisciplinaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
