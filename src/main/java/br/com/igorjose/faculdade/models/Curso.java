@@ -25,4 +25,7 @@ public class Curso {
 
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     private List<Disciplina> disciplinaList = new ArrayList<Disciplina>();
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+    private List<Aluno> alunosMatriculados = new ArrayList<Aluno>();
 }

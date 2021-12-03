@@ -1,6 +1,7 @@
 package br.com.igorjose.faculdade.controller;
 
 import br.com.igorjose.faculdade.dto.MessageDTO;
+import br.com.igorjose.faculdade.models.Curso;
 import br.com.igorjose.faculdade.models.Faculdade;
 import br.com.igorjose.faculdade.repository.FaculdadeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,4 +86,5 @@ public class FaculdadeController {
                 .message("Faculdade não encontrada!")
                 .build();
     }
+
 }

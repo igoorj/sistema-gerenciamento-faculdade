@@ -27,6 +27,4 @@ public class Aluno {
 
     private String dataNascimento;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    private Curso curso;
 }
