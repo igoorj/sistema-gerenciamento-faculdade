@@ -1,6 +1,7 @@
 package br.com.igorjose.faculdade.controller;
 
 import br.com.igorjose.faculdade.dto.MessageDTO;
+import br.com.igorjose.faculdade.exceptions.FaculdadeNotFound;
 import br.com.igorjose.faculdade.models.Curso;
 import br.com.igorjose.faculdade.models.Faculdade;
 import br.com.igorjose.faculdade.repository.FaculdadeRepository;
@@ -38,14 +39,14 @@ public class FaculdadeController {
     }
 
     @GetMapping("/{id}")
-    public Faculdade getFaculdadeById(@PathVariable Long id) {
+    public Faculdade getFaculdadeById(@PathVariable Long id) throws FaculdadeNotFound {
 
         Faculdade faculdadeSelecionada = verifyIfExistsFaculdade(id);
         return faculdadeSelecionada;
     }
 
     @PutMapping("/{id}")
-    public MessageDTO updateFaculdade(@PathVariable Long id, @RequestBody Faculdade faculdade) {
+    public MessageDTO updateFaculdade(@PathVariable Long id, @RequestBody Faculdade faculdade) throws FaculdadeNotFound {
 
         Faculdade faculdadeToUpdate = verifyIfExistsFaculdade(id);
 
@@ -65,7 +66,7 @@ public class FaculdadeController {
 
 
     @DeleteMapping("/{id}")
-    public MessageDTO deleteFaculdade(@PathVariable Long id) {
+    public MessageDTO deleteFaculdade(@PathVariable Long id) throws FaculdadeNotFound{
 
         Faculdade faculdade = verifyIfExistsFaculdade(id);
         if(faculdade != null) {
@@ -83,11 +84,9 @@ public class FaculdadeController {
                 .build();
     }
 
-    public Faculdade verifyIfExistsFaculdade(Long id) {
-        Faculdade faculdadeSelecionada = this.faculdadeRepository.findById(id).get();
-        if(faculdadeSelecionada != null) {
-            return faculdadeSelecionada;
-        }
-        return null;
+    public Faculdade verifyIfExistsFaculdade(Long id) throws FaculdadeNotFound {
+        return this.faculdadeRepository
+                .findById(id)
+                .orElseThrow(() -> new FaculdadeNotFound());
     }
 }

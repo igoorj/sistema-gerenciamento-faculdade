@@ -4,9 +4,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.NOT_FOUND)
-public class DisciplinaNotFound extends Throwable{
+public class FaculdadeNotFound extends Throwable{
 
-    public DisciplinaNotFound(Long id) {
-        super("Discplina de id: " +id+ " não encontrada!");
+    public FaculdadeNotFound() {
+        super("Faculdade não encontrada!");
     }
 }

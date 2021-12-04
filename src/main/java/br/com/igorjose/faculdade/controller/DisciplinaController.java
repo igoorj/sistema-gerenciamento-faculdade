@@ -1,6 +1,7 @@
 package br.com.igorjose.faculdade.controller;
 
 import br.com.igorjose.faculdade.dto.MessageDTO;
+import br.com.igorjose.faculdade.exceptions.DisciplinaNotFound;
 import br.com.igorjose.faculdade.models.Disciplina;
 import br.com.igorjose.faculdade.repository.DisciplinaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +42,7 @@ public class DisciplinaController {
     // get by id
 
     @GetMapping("/{id}")
-    public Disciplina findDisciplina(@PathVariable Long id) {
+    public Disciplina findDisciplina(@PathVariable Long id) throws DisciplinaNotFound {
         Disciplina disciplinaRecuperada = verifyIfExistsDisciplina(id);
         return disciplinaRecuperada;
     }
@@ -49,7 +50,7 @@ public class DisciplinaController {
     // update by id
 
     @PutMapping("/{id}/edit")
-    public MessageDTO updateDisciplina(@PathVariable Long id, @RequestBody Disciplina disciplina) {
+    public MessageDTO updateDisciplina(@PathVariable Long id, @RequestBody Disciplina disciplina) throws DisciplinaNotFound {
 
         Disciplina disciplinaToUpdate = verifyIfExistsDisciplina(id);
 
@@ -68,7 +69,7 @@ public class DisciplinaController {
     }
 
     @DeleteMapping("/{id}/delete")
-    public MessageDTO deleteDisciplina(@PathVariable Long id) {
+    public MessageDTO deleteDisciplina(@PathVariable Long id) throws DisciplinaNotFound {
 
         Disciplina disciplinaToDelete = verifyIfExistsDisciplina(id);
 
@@ -83,12 +84,10 @@ public class DisciplinaController {
         return null;
     }
 
-    public Disciplina verifyIfExistsDisciplina(Long id) {
+    public Disciplina verifyIfExistsDisciplina(Long id) throws DisciplinaNotFound {
 
-        Disciplina disciplinaSelecionada = this.disciplinaRepository.findById(id).get();
-        if(disciplinaSelecionada != null) {
-            return disciplinaSelecionada;
-        }
-        return null;
+        return this.disciplinaRepository
+                .findById(id)
+                .orElseThrow(() -> new DisciplinaNotFound(id));
     }
 }

@@ -1,6 +1,7 @@
 package br.com.igorjose.faculdade.controller;
 
 import br.com.igorjose.faculdade.dto.MessageDTO;
+import br.com.igorjose.faculdade.exceptions.CursoNotFound;
 import br.com.igorjose.faculdade.models.Curso;
 import br.com.igorjose.faculdade.repository.CursoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,14 +38,14 @@ public class CursoController {
     }
 
     @GetMapping("/{id}")
-    public Curso buscaCursoPorId(@PathVariable Long id) {
+    public Curso buscaCursoPorId(@PathVariable Long id) throws CursoNotFound {
 
         Curso cursoSelecionado = verifyIfExistsCurso(id);
         return cursoSelecionado;
     }
 
     @PutMapping("/{id}/edit")
-    public MessageDTO updateCursoById(@PathVariable Long id, @RequestBody Curso curso) {
+    public MessageDTO updateCursoById(@PathVariable Long id, @RequestBody Curso curso) throws CursoNotFound {
 
         Curso cursoToUpdate = verifyIfExistsCurso(id);
 
@@ -66,7 +67,7 @@ public class CursoController {
     }
 
     @DeleteMapping("/{id}/delete")
-    public MessageDTO deleteCurso(@PathVariable Long id) {
+    public MessageDTO deleteCurso(@PathVariable Long id) throws CursoNotFound{
 
         Curso cursoToDelete = verifyIfExistsCurso(id);
 
@@ -84,12 +85,10 @@ public class CursoController {
                 .build();
     }
 
-    public Curso verifyIfExistsCurso(Long id) {
+    public Curso verifyIfExistsCurso(Long id) throws CursoNotFound{
 
-        Curso cursoSelecionado = this.cursoRepository.getById(id);
-        if(cursoSelecionado != null) {
-            return cursoSelecionado;
-        }
-        return null;
+        return this.cursoRepository
+                .findById(id)
+                .orElseThrow(() -> new CursoNotFound());
     }
 }

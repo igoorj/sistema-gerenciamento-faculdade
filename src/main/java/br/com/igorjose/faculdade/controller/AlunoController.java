@@ -1,6 +1,8 @@
 package br.com.igorjose.faculdade.controller;
 
 import br.com.igorjose.faculdade.dto.MessageDTO;
+import br.com.igorjose.faculdade.exceptions.AlunoNotFound;
+import br.com.igorjose.faculdade.exceptions.CursoNotFound;
 import br.com.igorjose.faculdade.models.Aluno;
 import br.com.igorjose.faculdade.repository.AlunoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,14 +38,14 @@ public class AlunoController {
     }
 
     @GetMapping("/{id}")
-    public Aluno getAlunoById(@PathVariable Long id) {
+    public Aluno getAlunoById(@PathVariable Long id) throws AlunoNotFound  {
 
         Aluno aluno = verifyIsExistsAluno(id);
         return aluno;
     }
 
     @PutMapping("/{id}/edit")
-    public MessageDTO updateAluno(@PathVariable Long id, @RequestBody Aluno aluno) {
+    public MessageDTO updateAluno(@PathVariable Long id, @RequestBody Aluno aluno) throws AlunoNotFound  {
 
         Aluno alunoToUpdate = verifyIsExistsAluno(id);
 
@@ -59,7 +61,7 @@ public class AlunoController {
     }
 
     @DeleteMapping("/{id}/delete")
-    public MessageDTO deleteAluno(@PathVariable Long id) {
+    public MessageDTO deleteAluno(@PathVariable Long id) throws AlunoNotFound  {
 
         Aluno alunoToDelete = verifyIsExistsAluno(id);
         if(alunoToDelete != null ) {
@@ -69,12 +71,10 @@ public class AlunoController {
         return MessageDTO.builder().message("Id não identificado").build();
     }
 
-    public Aluno verifyIsExistsAluno(Long id) {
+    public Aluno verifyIsExistsAluno(Long id) throws AlunoNotFound {
 
-        Aluno alunoToReturn = this.alunoRepository.findById(id).get();
-        if(alunoToReturn != null) {
-            return alunoToReturn;
-        }
-        return null;
+        return this.alunoRepository
+                .findById(id)
+                .orElseThrow(() -> new AlunoNotFound());
     }
 }
