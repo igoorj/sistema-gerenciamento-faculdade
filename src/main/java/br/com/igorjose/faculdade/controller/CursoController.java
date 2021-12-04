@@ -39,18 +39,14 @@ public class CursoController {
     @GetMapping("/{id}")
     public Curso buscaCursoPorId(@PathVariable Long id) {
 
-        Optional<Curso> curso = this.cursoRepository.findById(id);
-
-        if(curso.isPresent()) {
-            return curso.get();
-        }
-        return null;
+        Curso cursoSelecionado = verifyIfExistsCurso(id);
+        return cursoSelecionado;
     }
 
     @PutMapping("/{id}/edit")
     public MessageDTO updateCursoById(@PathVariable Long id, @RequestBody Curso curso) {
 
-        Curso cursoToUpdate = this.cursoRepository.findById(id).get();
+        Curso cursoToUpdate = verifyIfExistsCurso(id);
 
         if(cursoToUpdate != null) {
             cursoToUpdate.setNome(curso.getNome());
@@ -72,11 +68,11 @@ public class CursoController {
     @DeleteMapping("/{id}/delete")
     public MessageDTO deleteCurso(@PathVariable Long id) {
 
-        Optional<Curso> cursoToDelete = this.cursoRepository.findById(id);
+        Curso cursoToDelete = verifyIfExistsCurso(id);
 
-        if(cursoToDelete.isPresent()) {
+        if(cursoToDelete != null) {
 
-            this.cursoRepository.delete(cursoToDelete.get());
+            this.cursoRepository.delete(cursoToDelete);
             return MessageDTO
                     .builder()
                     .message("Curso deletado com sucesso!")
@@ -86,5 +82,14 @@ public class CursoController {
                 .builder()
                 .message("Curso não encontrado!")
                 .build();
+    }
+
+    public Curso verifyIfExistsCurso(Long id) {
+
+        Curso cursoSelecionado = this.cursoRepository.getById(id);
+        if(cursoSelecionado != null) {
+            return cursoSelecionado;
+        }
+        return null;
     }
 }

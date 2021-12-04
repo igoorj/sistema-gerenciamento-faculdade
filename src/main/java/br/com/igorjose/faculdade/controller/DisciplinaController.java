@@ -42,8 +42,8 @@ public class DisciplinaController {
 
     @GetMapping("/{id}")
     public Disciplina findDisciplina(@PathVariable Long id) {
-        Optional<Disciplina> disciplinaRecuperada = this.disciplinaRepository.findById(id);
-        return disciplinaRecuperada.get();
+        Disciplina disciplinaRecuperada = verifyIfExistsDisciplina(id);
+        return disciplinaRecuperada;
     }
 
     // update by id
@@ -51,7 +51,7 @@ public class DisciplinaController {
     @PutMapping("/{id}/edit")
     public MessageDTO updateDisciplina(@PathVariable Long id, @RequestBody Disciplina disciplina) {
 
-        Disciplina disciplinaToUpdate = this.disciplinaRepository.findById(id).get();
+        Disciplina disciplinaToUpdate = verifyIfExistsDisciplina(id);
 
         if(disciplinaToUpdate != null) {
             disciplinaToUpdate.setCargaHoraria(disciplina.getCargaHoraria());
@@ -70,7 +70,7 @@ public class DisciplinaController {
     @DeleteMapping("/{id}/delete")
     public MessageDTO deleteDisciplina(@PathVariable Long id) {
 
-        Disciplina disciplinaToDelete = this.disciplinaRepository.findById(id).get();
+        Disciplina disciplinaToDelete = verifyIfExistsDisciplina(id);
 
         if(disciplinaToDelete != null) {
             this.disciplinaRepository.delete(disciplinaToDelete);
@@ -79,6 +79,15 @@ public class DisciplinaController {
                     .builder()
                     .message("Disciplina deletada com sucesso!")
                     .build();
+        }
+        return null;
+    }
+
+    public Disciplina verifyIfExistsDisciplina(Long id) {
+
+        Disciplina disciplinaSelecionada = this.disciplinaRepository.findById(id).get();
+        if(disciplinaSelecionada != null) {
+            return disciplinaSelecionada;
         }
         return null;
     }

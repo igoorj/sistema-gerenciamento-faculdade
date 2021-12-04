@@ -40,18 +40,14 @@ public class FaculdadeController {
     @GetMapping("/{id}")
     public Faculdade getFaculdadeById(@PathVariable Long id) {
 
-        Optional<Faculdade> faculdade = this.faculdadeRepository.findById(id);
-
-        if(faculdade.isPresent()) {
-            return faculdade.get();
-        }
-        return null;
+        Faculdade faculdadeSelecionada = verifyIfExistsFaculdade(id);
+        return faculdadeSelecionada;
     }
 
     @PutMapping("/{id}")
     public MessageDTO updateFaculdade(@PathVariable Long id, @RequestBody Faculdade faculdade) {
 
-        Faculdade faculdadeToUpdate = this.faculdadeRepository.findById(id).get();
+        Faculdade faculdadeToUpdate = verifyIfExistsFaculdade(id);
 
         if(faculdadeToUpdate != null) {
 
@@ -71,7 +67,7 @@ public class FaculdadeController {
     @DeleteMapping("/{id}")
     public MessageDTO deleteFaculdade(@PathVariable Long id) {
 
-        Faculdade faculdade = this.faculdadeRepository.findById(id).get();
+        Faculdade faculdade = verifyIfExistsFaculdade(id);
         if(faculdade != null) {
 
             this.faculdadeRepository.delete(faculdade);
@@ -87,4 +83,11 @@ public class FaculdadeController {
                 .build();
     }
 
+    public Faculdade verifyIfExistsFaculdade(Long id) {
+        Faculdade faculdadeSelecionada = this.faculdadeRepository.findById(id).get();
+        if(faculdadeSelecionada != null) {
+            return faculdadeSelecionada;
+        }
+        return null;
+    }
 }

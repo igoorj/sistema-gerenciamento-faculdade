@@ -37,16 +37,16 @@ public class AlunoController {
 
     @GetMapping("/{id}")
     public Aluno getAlunoById(@PathVariable Long id) {
-        Optional<Aluno> aluno = this.alunoRepository.findById(id);
-        if(aluno.isPresent()) {
-            return aluno.get();
-        }
-        return null;
+
+        Aluno aluno = verifyIsExistsAluno(id);
+        return aluno;
     }
 
     @PutMapping("/{id}/edit")
     public MessageDTO updateAluno(@PathVariable Long id, @RequestBody Aluno aluno) {
-        Aluno alunoToUpdate = this.alunoRepository.findById(id).get();
+
+        Aluno alunoToUpdate = verifyIsExistsAluno(id);
+
         if(alunoToUpdate != null) {
             alunoToUpdate.setNome(aluno.getNome());
             alunoToUpdate.setCpf(aluno.getCpf());
@@ -60,11 +60,21 @@ public class AlunoController {
 
     @DeleteMapping("/{id}/delete")
     public MessageDTO deleteAluno(@PathVariable Long id) {
-        Optional<Aluno> alunoToDelete = this.alunoRepository.findById(id);
-        if(alunoToDelete.isPresent()) {
-            this.alunoRepository.delete(alunoToDelete.get());
+
+        Aluno alunoToDelete = verifyIsExistsAluno(id);
+        if(alunoToDelete != null ) {
+            this.alunoRepository.delete(alunoToDelete);
             return MessageDTO.builder().message("Aluno deletado com sucesso").build();
         }
         return MessageDTO.builder().message("Id não identificado").build();
+    }
+
+    public Aluno verifyIsExistsAluno(Long id) {
+
+        Aluno alunoToReturn = this.alunoRepository.findById(id).get();
+        if(alunoToReturn != null) {
+            return alunoToReturn;
+        }
+        return null;
     }
 }
