@@ -5,6 +5,7 @@ import br.com.igorjose.faculdade.exceptions.FaculdadeNotFound;
 import br.com.igorjose.faculdade.models.Curso;
 import br.com.igorjose.faculdade.models.Faculdade;
 import br.com.igorjose.faculdade.repository.FaculdadeRepository;
+import br.com.igorjose.faculdade.service.FaculdadeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,78 +16,37 @@ import java.util.Optional;
 @RequestMapping("/faculdade")
 public class FaculdadeController {
 
-    private FaculdadeRepository faculdadeRepository;
+    private FaculdadeService faculdadeService;
 
     @Autowired
-    public FaculdadeController(FaculdadeRepository faculdadeRepository) {
-        this.faculdadeRepository = faculdadeRepository;
+    public FaculdadeController(FaculdadeService faculdadeService) {
+        this.faculdadeService = faculdadeService;
     }
 
     @PostMapping
     public MessageDTO cadastrarFaculdade(@RequestBody Faculdade faculdade) {
-
-        this.faculdadeRepository.save(faculdade);
-        return MessageDTO
-                .builder()
-                .message("Faculdade Cadastrada com sucesso!")
-                .build();
+        return this.faculdadeService.createFaculdade(faculdade);
     }
 
     @GetMapping
     public List<Faculdade> getFaculdades() {
-        List<Faculdade> faculdades = this.faculdadeRepository.findAll();
-        return faculdades;
+        return this.faculdadeService.getAllFaculdades();
     }
 
     @GetMapping("/{id}")
     public Faculdade getFaculdadeById(@PathVariable Long id) throws FaculdadeNotFound {
-
-        Faculdade faculdadeSelecionada = verifyIfExistsFaculdade(id);
-        return faculdadeSelecionada;
+        return this.faculdadeService.getFaculdadeById(id);
     }
 
     @PutMapping("/{id}")
     public MessageDTO updateFaculdade(@PathVariable Long id, @RequestBody Faculdade faculdade) throws FaculdadeNotFound {
-
-        Faculdade faculdadeToUpdate = verifyIfExistsFaculdade(id);
-
-        if(faculdadeToUpdate != null) {
-
-            faculdadeToUpdate.setCnpj(faculdade.getCnpj());
-            faculdadeToUpdate.setCursos(faculdade.getCursos());
-            faculdadeToUpdate.setNome(faculdade.getNome());
-            faculdadeToUpdate.setEndereco(faculdade.getEndereco());
-
-            this.faculdadeRepository.save(faculdadeToUpdate);
-            return MessageDTO.builder().message("Faculdade atualizada com sucesso").build();
-        }
-        return MessageDTO.builder().message("Id não encontrado").build();
-
+        return this.faculdadeService.updateFaculdade(id, faculdade);
     }
 
 
     @DeleteMapping("/{id}")
     public MessageDTO deleteFaculdade(@PathVariable Long id) throws FaculdadeNotFound{
-
-        Faculdade faculdade = verifyIfExistsFaculdade(id);
-        if(faculdade != null) {
-
-            this.faculdadeRepository.delete(faculdade);
-            return MessageDTO
-                    .builder()
-                    .message("Faculdade deletada com sucesso!")
-                    .build();
-        }
-        this.faculdadeRepository.delete(faculdade);
-        return MessageDTO
-                .builder()
-                .message("Faculdade não encontrada!")
-                .build();
+        return this.faculdadeService.deleteFaculdade(id);
     }
 
-    public Faculdade verifyIfExistsFaculdade(Long id) throws FaculdadeNotFound {
-        return this.faculdadeRepository
-                .findById(id)
-                .orElseThrow(() -> new FaculdadeNotFound());
-    }
 }
