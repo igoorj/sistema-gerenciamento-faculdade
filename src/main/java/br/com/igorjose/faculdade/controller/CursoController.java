@@ -1,11 +1,14 @@
 package br.com.igorjose.faculdade.controller;
 
+import br.com.igorjose.faculdade.dto.CursoDTO;
 import br.com.igorjose.faculdade.dto.MessageDTO;
 import br.com.igorjose.faculdade.exceptions.CursoNotFound;
 import br.com.igorjose.faculdade.models.Curso;
 import br.com.igorjose.faculdade.service.CursoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -25,9 +28,9 @@ public class CursoController {
     }
 
     @PostMapping
-    public MessageDTO cadastroCurso(@RequestBody Curso curso) {
+    public MessageDTO cadastroCurso(@RequestBody @Valid CursoDTO cursoDTO) {
 
-        return this.cursoService.createCurso(curso);
+        return this.cursoService.createCurso(cursoDTO);
     }
 
     @GetMapping("/{id}")
@@ -37,9 +40,9 @@ public class CursoController {
     }
 
     @PutMapping("/{id}/edit")
-    public MessageDTO updateCursoById(@PathVariable Long id, @RequestBody Curso curso) throws CursoNotFound {
+    public MessageDTO updateCursoById(@PathVariable Long id, @RequestBody @Valid CursoDTO cursoDTO) throws CursoNotFound {
 
-        return this.cursoService.updateCurso(id, curso);
+        return this.cursoService.updateCurso(id, cursoDTO);
     }
 
     @DeleteMapping("/{id}/delete")

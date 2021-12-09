@@ -1,5 +1,6 @@
 package br.com.igorjose.faculdade.controller;
 
+import br.com.igorjose.faculdade.dto.DisciplinaDTO;
 import br.com.igorjose.faculdade.dto.MessageDTO;
 import br.com.igorjose.faculdade.exceptions.DisciplinaNotFound;
 import br.com.igorjose.faculdade.models.Disciplina;
@@ -7,6 +8,8 @@ import br.com.igorjose.faculdade.repository.DisciplinaRepository;
 import br.com.igorjose.faculdade.service.DisciplinaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,9 +31,9 @@ public class DisciplinaController {
     }
 
     @PostMapping("/")
-    public MessageDTO cadastroDisciplinas(@RequestBody Disciplina novaDisciplina) {
+    public MessageDTO cadastroDisciplinas(@RequestBody @Valid DisciplinaDTO novaDisciplinaDTO) {
 
-        return this.disciplinaService.createDisciplina(novaDisciplina);
+        return this.disciplinaService.createDisciplina(novaDisciplinaDTO);
     }
 
     @GetMapping("/{id}")
@@ -41,9 +44,9 @@ public class DisciplinaController {
 
 
     @PutMapping("/{id}/edit")
-    public MessageDTO updateDisciplina(@PathVariable Long id, @RequestBody Disciplina disciplina) throws DisciplinaNotFound {
+    public MessageDTO updateDisciplina(@PathVariable Long id, @RequestBody @Valid DisciplinaDTO disciplinaDTO) throws DisciplinaNotFound {
 
-        return this.disciplinaService.updateDisciplina(id, disciplina);
+        return this.disciplinaService.updateDisciplina(id, disciplinaDTO);
     }
 
     @DeleteMapping("/{id}/delete")

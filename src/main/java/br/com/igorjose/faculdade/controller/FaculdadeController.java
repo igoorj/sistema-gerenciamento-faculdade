@@ -1,5 +1,6 @@
 package br.com.igorjose.faculdade.controller;
 
+import br.com.igorjose.faculdade.dto.FaculdadeDTO;
 import br.com.igorjose.faculdade.dto.MessageDTO;
 import br.com.igorjose.faculdade.exceptions.FaculdadeNotFound;
 import br.com.igorjose.faculdade.models.Curso;
@@ -9,6 +10,7 @@ import br.com.igorjose.faculdade.service.FaculdadeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,8 +26,8 @@ public class FaculdadeController {
     }
 
     @PostMapping
-    public MessageDTO cadastrarFaculdade(@RequestBody Faculdade faculdade) {
-        return this.faculdadeService.createFaculdade(faculdade);
+    public MessageDTO cadastrarFaculdade(@RequestBody @Valid FaculdadeDTO faculdadeDTO) {
+        return this.faculdadeService.createFaculdade(faculdadeDTO);
     }
 
     @GetMapping
@@ -39,8 +41,8 @@ public class FaculdadeController {
     }
 
     @PutMapping("/{id}")
-    public MessageDTO updateFaculdade(@PathVariable Long id, @RequestBody Faculdade faculdade) throws FaculdadeNotFound {
-        return this.faculdadeService.updateFaculdade(id, faculdade);
+    public MessageDTO updateFaculdade(@PathVariable Long id, @RequestBody @Valid FaculdadeDTO faculdadeDTO) throws FaculdadeNotFound {
+        return this.faculdadeService.updateFaculdade(id, faculdadeDTO);
     }
 
 

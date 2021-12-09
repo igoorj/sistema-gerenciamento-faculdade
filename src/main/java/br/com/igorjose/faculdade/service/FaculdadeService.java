@@ -1,5 +1,6 @@
 package br.com.igorjose.faculdade.service;
 
+import br.com.igorjose.faculdade.dto.FaculdadeDTO;
 import br.com.igorjose.faculdade.dto.MessageDTO;
 import br.com.igorjose.faculdade.exceptions.FaculdadeNotFound;
 import br.com.igorjose.faculdade.models.Faculdade;
@@ -27,19 +28,27 @@ public class FaculdadeService {
         return faculdade;
     }
 
-    public MessageDTO createFaculdade(Faculdade faculdade) {
-        this.faculdadeRepository.save(faculdade);
+    public MessageDTO createFaculdade(FaculdadeDTO faculdadeDTO) {
+
+        Faculdade faculdadeToSaved = Faculdade
+                .builder()
+                .nome(faculdadeDTO.getNome())
+                .cnpj(faculdadeDTO.getCnpj())
+                .endereco(faculdadeDTO.getEndereco())
+                .cursos(faculdadeDTO.getCursos())
+                .build();
+        this.faculdadeRepository.save(faculdadeToSaved);
         return MessageDTO.builder().message("Faculdade cadastrada com sucesso").build();
     }
 
-    public MessageDTO updateFaculdade(Long id, Faculdade faculdade) throws FaculdadeNotFound {
+    public MessageDTO updateFaculdade(Long id, FaculdadeDTO faculdadeDTO) throws FaculdadeNotFound {
 
         Faculdade faculdadeToUpdate = verifyIfExistsFaculdade(id);
 
-        faculdadeToUpdate.setNome(faculdade.getNome());
-        faculdadeToUpdate.setCursos(faculdade.getCursos());
-        faculdadeToUpdate.setCnpj(faculdade.getCnpj());
-        faculdadeToUpdate.setEndereco(faculdade.getEndereco());
+        faculdadeToUpdate.setNome(faculdadeDTO.getNome());
+        faculdadeToUpdate.setCursos(faculdadeDTO.getCursos());
+        faculdadeToUpdate.setCnpj(faculdadeDTO.getCnpj());
+        faculdadeToUpdate.setEndereco(faculdadeDTO.getEndereco());
         this.faculdadeRepository.save(faculdadeToUpdate);
 
         return MessageDTO.builder().message("Faculdade atualizada com sucesso!").build();

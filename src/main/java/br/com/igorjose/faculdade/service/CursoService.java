@@ -2,6 +2,7 @@ package br.com.igorjose.faculdade.service;
 
 import java.util.List;
 
+import br.com.igorjose.faculdade.dto.CursoDTO;
 import br.com.igorjose.faculdade.dto.MessageDTO;
 import br.com.igorjose.faculdade.exceptions.CursoNotFound;
 import br.com.igorjose.faculdade.models.Curso;
@@ -28,20 +29,27 @@ public class CursoService {
         return curso;
     }
 
-    public MessageDTO createCurso(Curso curso) {
-        this.cursoRepository.save(curso);
+    public MessageDTO createCurso(CursoDTO cursoDTO) {
+
+        Curso cursoToSaved = Curso
+                .builder()
+                .nome(cursoDTO.getNome())
+                .disciplinaList(cursoDTO.getDisciplinaList())
+                .alunosMatriculados(cursoDTO.getAlunosMatriculados())
+                .build();
+        this.cursoRepository.save(cursoToSaved);
         return MessageDTO
                 .builder()
                 .message("Curso cadastrado com sucesso!")
                 .build();
     }
-    public MessageDTO updateCurso(Long id, Curso curso) throws CursoNotFound {
+    public MessageDTO updateCurso(Long id, CursoDTO cursoDTO) throws CursoNotFound {
         Curso cursoToUpdate = verifyIfExistsCurso(id);
 
         if(cursoToUpdate != null) {
-            cursoToUpdate.setNome(curso.getNome());
-            cursoToUpdate.setDisciplinaList(curso.getDisciplinaList());
-            cursoToUpdate.setAlunosMatriculados(curso.getAlunosMatriculados());
+            cursoToUpdate.setNome(cursoDTO.getNome());
+            cursoToUpdate.setDisciplinaList(cursoDTO.getDisciplinaList());
+            cursoToUpdate.setAlunosMatriculados(cursoDTO.getAlunosMatriculados());
 
             this.cursoRepository.save(cursoToUpdate);
             return MessageDTO

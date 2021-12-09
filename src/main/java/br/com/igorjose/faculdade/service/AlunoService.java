@@ -1,5 +1,6 @@
 package br.com.igorjose.faculdade.service;
 
+import br.com.igorjose.faculdade.dto.AlunoDTO;
 import br.com.igorjose.faculdade.dto.MessageDTO;
 import br.com.igorjose.faculdade.exceptions.AlunoNotFound;
 import br.com.igorjose.faculdade.models.Aluno;
@@ -27,17 +28,24 @@ public class AlunoService {
         return aluno;
     }
 
-    public MessageDTO createAluno(Aluno aluno) {
-        this.alunoRepository.save(aluno);
+    public MessageDTO createAluno(AlunoDTO alunoDTO) {
+
+        Aluno alunoToSaved = Aluno
+                .builder()
+                .nome(alunoDTO.getNome())
+                .cpf(alunoDTO.getCpf())
+                .dataNascimento(alunoDTO.getDataNascimento())
+                .build();
+        this.alunoRepository.save(alunoToSaved);
         return MessageDTO.builder().message("Aluno cadastrado com sucesso").build();
     }
 
-    public MessageDTO updateAluno(Long id, Aluno aluno) throws AlunoNotFound {
+    public MessageDTO updateAluno(Long id, AlunoDTO alunoDTO) throws AlunoNotFound {
         Aluno alunoToUpdate = verifyIsExistsAluno(id);
         if(alunoToUpdate != null) {
-            alunoToUpdate.setNome(aluno.getNome());
-            alunoToUpdate.setCpf(aluno.getCpf());
-            alunoToUpdate.setDataNascimento(aluno.getDataNascimento());
+            alunoToUpdate.setNome(alunoDTO.getNome());
+            alunoToUpdate.setCpf(alunoDTO.getCpf());
+            alunoToUpdate.setDataNascimento(alunoDTO.getDataNascimento());
 
             this.alunoRepository.save(alunoToUpdate);
             return MessageDTO.builder().message("Aluno atualizado com sucesso!").build();

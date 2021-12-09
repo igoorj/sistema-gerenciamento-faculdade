@@ -1,5 +1,6 @@
 package br.com.igorjose.faculdade.controller;
 
+import br.com.igorjose.faculdade.dto.AlunoDTO;
 import br.com.igorjose.faculdade.dto.MessageDTO;
 import br.com.igorjose.faculdade.exceptions.AlunoNotFound;
 import br.com.igorjose.faculdade.exceptions.CursoNotFound;
@@ -9,6 +10,7 @@ import br.com.igorjose.faculdade.service.AlunoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,8 +26,8 @@ public class AlunoController {
     }
 
     @PostMapping
-    public MessageDTO createAlunoByCurso(@RequestBody Aluno aluno) {
-        return this.alunoService.createAluno(aluno);
+    public MessageDTO createAlunoByCurso(@RequestBody @Valid AlunoDTO alunoDTO) {
+        return this.alunoService.createAluno(alunoDTO);
     }
 
     @GetMapping
@@ -39,8 +41,8 @@ public class AlunoController {
     }
 
     @PutMapping("/{id}/edit")
-    public MessageDTO updateAluno(@PathVariable Long id, @RequestBody Aluno aluno) throws AlunoNotFound  {
-        return this.alunoService.updateAluno(id, aluno);
+    public MessageDTO updateAluno(@PathVariable Long id, @RequestBody @Valid AlunoDTO alunoDTO) throws AlunoNotFound  {
+        return this.alunoService.updateAluno(id, alunoDTO);
     }
 
     @DeleteMapping("/{id}/delete")
